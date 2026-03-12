@@ -83,7 +83,22 @@ export default function Cart({ onClose }){
           </div>
         )}
 
-        {!order && (
+        {!order && !user && (
+          <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
+            <svg className="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <div>
+              <p className="font-semibold text-gray-900">Sign in to continue</p>
+              <p className="text-sm text-gray-400 mt-1">You need an account to place an order</p>
+            </div>
+            <button onClick={onClose} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all">
+              Back to shop
+            </button>
+          </div>
+        )}
+
+        {!order && user && (
           <>
             {/* Items */}
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">

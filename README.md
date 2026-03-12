@@ -1,65 +1,155 @@
-# Shoe Store (MERN + Vite React + Tailwind)
+# TrailCraft — Shoe Store
 
-This repository contains a minimal MERN-stack shoe store prototype.
+A full-stack shoe store built with the MERN stack (MongoDB, Express, React, Node.js) and Vite + Tailwind CSS.
 
-Structure:
+**Live demo:** https://trailcraft.vercel.app
+**API:** https://trailcraft.onrender.com
 
-- `backend/` — Express + Mongoose API
-- `frontend/` — Vite + React + Tailwind UI
+---
 
-Quick start:
+## Project Structure
 
-1. Backend
+```
+trailcraft/
+├── backend/     Express + Mongoose REST API
+└── frontend/    Vite + React + Tailwind CSS
+```
+
+---
+
+## Roles & Features
+
+### Customer
+
+| Feature | Description |
+|---|---|
+| Browse catalog | View all available shoes with images, brand, price, and category filters |
+| Product detail | Click any product to see full details, description, available sizes |
+| Size guide | View a US / EU / inches / CM conversion chart from any product page |
+| Select size | Choose a size before adding to cart |
+| Cart | Add/remove items, adjust quantities, cart persists across page refreshes via `localStorage` |
+| Checkout | Enter shipping info (name, address, city, postal code, country, email) and place an order |
+| Order history | View all past orders via the **My Orders** button in the header or the Profile modal |
+| Order status | See live status badges on each order (Pending → Processing → In Transit → Out for Delivery → Delivered / Cancelled) |
+| Account | Sign up and log in with email + password |
+
+> Banned customers cannot place orders and cannot log in.
+
+---
+
+### Vendor
+
+| Feature | Description |
+|---|---|
+| Add product | Upload a product image, set name, brand, price, category, sizes, and description |
+| Edit product | Update any field or swap the product image |
+| Delete product | Remove a product from the store permanently |
+| My products | The catalog only shows products belonging to the logged-in vendor on their dashboard |
+
+> Banned vendors' products are automatically hidden from the public catalog.
+
+---
+
+### Admin
+
+| Feature | Description |
+|---|---|
+| View all orders | See every order placed on the platform with customer info, items, total, and current status |
+| Update order status | Change an order's status through the pipeline: `pending → processing → in_transit → out_for_delivery → delivered` (or `cancelled` at any stage) |
+| Manage users | View all users grouped by role (Admins, Vendors, Customers) |
+| Ban / Unban users | Toggle a user's banned state; banned users cannot log in or interact with the store |
+
+---
+
+## Default Seeded Accounts
+
+These accounts are created automatically on first server start:
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@shoestore.local` | `AdminPass123` |
+| Vendor | `vendor@shoestore.local` | `VendorPass123` |
+
+The admin account is marked `isHardcoded: true` in the database and should not be deleted.
+The default vendor is assigned ownership of all sample products.
+
+---
+
+## Local Development
+
+### Prerequisites
+- Node.js 18+
+- MongoDB (local or Atlas)
+
+### Backend
 
 ```bash
 cd backend
 npm install
-# copy .env.example to .env and update MONGO_URI if you have MongoDB
-npm run dev
+cp .env.example .env      # then fill in MONGO_URI and JWT_SECRET
+npm run dev               # starts on http://localhost:5000
 ```
 
-2. Frontend
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm run dev
+# create frontend/.env.local and add:
+# VITE_API_URL=http://localhost:5000
+npm run dev               # starts on http://localhost:5173
 ```
 
-**Use cases / Features**
+---
 
-**Customer**
+## Environment Variables
 
-- Browse product catalog (list and detail retrieval).
-- Add items to cart with local persistence (`localStorage`).
-- Checkout flow: collect shipping info and place orders (POST `/api/orders`).
-- View order details (GET `/api/orders/:id`).
+### Backend (`backend/.env`)
 
-**Vendor**
+| Variable | Description | Example |
+|---|---|---|
+| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/trailcraft` |
+| `JWT_SECRET` | Secret key for signing JWTs | any long random string |
+| `PORT` | Port to listen on (optional) | `5000` |
+| `ADMIN_EMAIL` | Override default admin email | `admin@shoestore.local` |
+| `ADMIN_PASS` | Override default admin password | `AdminPass123` |
+| `VENDOR_EMAIL` | Override default vendor email | `vendor@shoestore.local` |
+| `VENDOR_PASS` | Override default vendor password | `VendorPass123` |
 
-- Add new products (vendors can create products and upload images).
-- Manage vendor products (delete products they own).
-- Uploaded images are stored under `/uploads` and are referenced by product `image` URLs.
+### Frontend (`frontend/.env.local`)
 
-**Admin**
+| Variable | Description | Example |
+|---|---|---|
+| `VITE_API_URL` | Backend API base URL | `https://trailcraft.onrender.com` |
 
-- View all orders (GET `/api/orders`).
-- Manage users (ban/unban) and view admin dashboards in the frontend.
-- Seed or create products via `POST /api/products/seed` or `node backend/seed.js`.
+---
 
-**Notes on seeded users**
+## Deployment
 
-- A hardcoded Admin user is created on server start (if not present). Default credentials:
-  - Email: `admin@shoestore.local`
-  - Password: `AdminPass123`
-  - This account is marked `isHardcoded: true` in the database and intended to remain unchanged.
-- A default Vendor user is created on server start (if not present) and existing products without an owner are assigned to this vendor. Default credentials:
-  - Email: `vendor@shoestore.local`
-  - Password: `VendorPass123`
-  - Store name: `Default Store`
+### Backend — Render Web Service
+1. Connect your GitHub repo
+2. Set **Root Directory** to `backend`
+3. **Build command:** `npm install`
+4. **Start command:** `node server.js`
+5. Add all backend environment variables in the Render dashboard
 
-Runs with in-memory sample data if no MongoDB is configured; set `MONGO_URI` in `backend/.env` to enable persistence. Frontend expects the API at `VITE_API_URL` env var or `http://localhost:5000`.
+### Frontend — Vercel
+1. Import your GitHub repo on Vercel
+2. Set **Root Directory** to `frontend`
+3. Add env var: `VITE_API_URL` = your Render backend URL
+4. Deploy — Vercel auto-detects Vite
 
-Notes:
+> **Note:** The free Render tier spins down after 15 minutes of inactivity. The first request after sleep may take 20–30 seconds to respond.
 
-- Backend will fall back to sample in-memory products if no MongoDB is configured.
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| Database | MongoDB + Mongoose |
+| Auth | JWT (jsonwebtoken) + bcryptjs |
+| Image upload | Base64 → stored in `backend/uploads/` |
+| Deployment | Render (backend) + Vercel (frontend) + MongoDB Atlas |

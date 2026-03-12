@@ -2,8 +2,8 @@
 
 A full-stack shoe store built with the MERN stack (MongoDB, Express, React, Node.js) and Vite + Tailwind CSS.
 
-**Live demo:** https://trailcraft.vercel.app
-**API:** https://trailcraft.onrender.com
+**Frontend:** https://trailcraft.vercel.app
+**Backend:** https://trailcraft.onrender.com
 
 ---
 
@@ -69,77 +69,9 @@ These accounts are created automatically on first server start:
 |---|---|---|
 | Admin | `admin@shoestore.local` | `AdminPass123` |
 | Vendor | `vendor@shoestore.local` | `VendorPass123` |
+| Customer | `bilal@gmail.com` | `bilalali` |
 
-The admin account is marked `isHardcoded: true` in the database and should not be deleted.
-The default vendor is assigned ownership of all sample products.
-
----
-
-## Local Development
-
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-
-### Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env      # then fill in MONGO_URI and JWT_SECRET
-npm run dev               # starts on http://localhost:5000
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-# create frontend/.env.local and add:
-# VITE_API_URL=http://localhost:5000
-npm run dev               # starts on http://localhost:5173
-```
-
----
-
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-| Variable | Description | Example |
-|---|---|---|
-| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/trailcraft` |
-| `JWT_SECRET` | Secret key for signing JWTs | any long random string |
-| `PORT` | Port to listen on (optional) | `5000` |
-| `ADMIN_EMAIL` | Override default admin email | `admin@shoestore.local` |
-| `ADMIN_PASS` | Override default admin password | `AdminPass123` |
-| `VENDOR_EMAIL` | Override default vendor email | `vendor@shoestore.local` |
-| `VENDOR_PASS` | Override default vendor password | `VendorPass123` |
-
-### Frontend (`frontend/.env.local`)
-
-| Variable | Description | Example |
-|---|---|---|
-| `VITE_API_URL` | Backend API base URL | `https://trailcraft.onrender.com` |
-
----
-
-## Deployment
-
-### Backend — Render Web Service
-1. Connect your GitHub repo
-2. Set **Root Directory** to `backend`
-3. **Build command:** `npm install`
-4. **Start command:** `node server.js`
-5. Add all backend environment variables in the Render dashboard
-
-### Frontend — Vercel
-1. Import your GitHub repo on Vercel
-2. Set **Root Directory** to `frontend`
-3. Add env var: `VITE_API_URL` = your Render backend URL
-4. Deploy — Vercel auto-detects Vite
-
-> **Note:** The free Render tier spins down after 15 minutes of inactivity. The first request after sleep may take 20–30 seconds to respond.
+The admin account's harcoded and shouldn't be deleted.
 
 ---
 

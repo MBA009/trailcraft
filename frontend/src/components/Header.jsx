@@ -10,8 +10,16 @@ import Profile from './Profile'
 import { useAuth } from '../context/AuthContext'
 
 export default function Header(){
-  const { items } = useCart()
+  const { items, clear } = useCart()
   const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    clear()
+    logout()
+    setShowCart(false)
+    setShowMobileMenu(false)
+    setShowProfile(false)
+  }
   const [showCart, setShowCart] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showUsers, setShowUsers] = useState(false)
@@ -63,7 +71,7 @@ export default function Header(){
                 <span className="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold uppercase">{(user.email || 'U')[0]}</span>
                 <span className="text-gray-700 font-medium max-w-[120px] truncate">{user.email}</span>
               </button>
-              <button onClick={logout} className="text-sm font-medium text-gray-500 hover:text-red-500 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all">Logout</button>
+              <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-red-500 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all">Logout</button>
             </>
           ) : (
             <>
@@ -154,7 +162,7 @@ export default function Header(){
                 Profile
               </button>
               <div className="border-t border-gray-100 mt-2 pt-2">
-                <button onClick={() => { logout(); closeMobile() }}
+                <button onClick={handleLogout}
                   className="w-full flex items-center gap-2 text-sm font-medium text-red-500 hover:bg-red-50 px-3 py-2.5 rounded-xl transition-all text-left">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                   Logout

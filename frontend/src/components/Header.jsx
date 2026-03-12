@@ -59,7 +59,7 @@ export default function Header(){
                   <button onClick={() => setShowUsers(u => !u)} className="text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">Users</button>
                 </>
               )}
-              {(user.role === 'customer' || user.role === 'vendor') && (
+              {(user.role === 'customer') && (
                 <button onClick={() => setShowProfile(true)}
                   className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -87,14 +87,16 @@ export default function Header(){
 
         {/* Mobile right side */}
         <div className="flex sm:hidden items-center gap-2">
-          {/* Cart (always visible) */}
-          <button onClick={() => setShowCart(s => !s)}
-            className="relative flex items-center gap-1.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition-all shadow-sm">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
-            )}
-          </button>
+          {/* Cart (hidden for vendors) */}
+          {user?.role !== 'vendor' && (
+            <button onClick={() => setShowCart(s => !s)}
+              className="relative flex items-center gap-1.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
+              )}
+            </button>
+          )}
           {/* Hamburger */}
           <button onClick={() => setShowMobileMenu(m => !m)}
             className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">
@@ -105,15 +107,17 @@ export default function Header(){
           </button>
         </div>
 
-        {/* Desktop cart */}
-        <button onClick={() => setShowCart(s => !s)}
-          className="hidden sm:flex relative items-center gap-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-4 py-1.5 rounded-lg transition-all shadow-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-          <span>Cart</span>
-          {cartCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
-          )}
-        </button>
+        {/* Desktop cart (hidden for vendors) */}
+        {user?.role !== 'vendor' && (
+          <button onClick={() => setShowCart(s => !s)}
+            className="hidden sm:flex relative items-center gap-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-4 py-1.5 rounded-lg transition-all shadow-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <span>Cart</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Mobile menu dropdown */}
@@ -149,7 +153,7 @@ export default function Header(){
                   </button>
                 </>
               )}
-              {(user.role === 'customer' || user.role === 'vendor') && (
+              {(user.role === 'customer') && (
                 <button onClick={() => { setShowProfile(true); closeMobile() }}
                   className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>

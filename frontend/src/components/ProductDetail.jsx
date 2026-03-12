@@ -85,7 +85,7 @@ export default function ProductDetail({ product, onClose }){
 
             {/* Auth gate / Add to cart */}
             <div className="mt-6">
-              {!user ? (
+              {user?.role === 'vendor' ? null : !user ? (
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
                   <p className="text-sm font-medium text-gray-700 mb-3">Sign in to add to cart</p>
                   <div className="flex gap-2">

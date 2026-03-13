@@ -1,6 +1,6 @@
 # TrailCraft — Shoe Store
 
-A full-stack shoe store built with the MERN stack (MongoDB, Express, React, Node.js) and Vite + Tailwind CSS.
+A full-stack shoe store built with the MERN stack (MongoDB, Express, React, Node.js) and Vite + Tailwind CSS. Side note: the backend is deployed on render (free tier) so it takes around 30s to a minute for the server to be up and running.  
 
 **Frontend:** https://trailcraft-eight.vercel.app
 **Backend:** https://trailcraft.onrender.com

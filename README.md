@@ -2,8 +2,7 @@
 
 A full-stack shoe store built with the MERN stack (MongoDB, Express, React, Node.js) and Vite + Tailwind CSS.
 
-**Live demo:** https://trailcraft.vercel.app
-**API:** https://trailcraft.onrender.com
+**App:** [https://trailcraft.vercel.app](https://trailcraft-eight.vercel.app/)
 
 ---
 

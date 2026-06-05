@@ -69,6 +69,7 @@ These accounts are created automatically on first server start:
 |---|---|---|
 | Admin | `admin@shoestore.local` | `AdminPass123` |
 | Vendor | `vendor@shoestore.local` | `VendorPass123` |
+| Customer | `bilal@gmail.com` | `bilalali` |
 
 The admin account is marked `isHardcoded: true` in the database and should not be deleted.
 The default vendor is assigned ownership of all sample products.

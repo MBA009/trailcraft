@@ -7,11 +7,22 @@ import AddProductForm from './AddProductForm'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 import Profile from './Profile'
+import AIRecommender from './AIRecommender'
+import VendorDashboard from './VendorDashboard'
+import PromoManager from './PromoManager'
 import { useAuth } from '../context/AuthContext'
 
 export default function Header(){
-  const { items } = useCart()
+  const { items, clear } = useCart()
   const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    clear()
+    logout()
+    setShowCart(false)
+    setShowMobileMenu(false)
+    setShowProfile(false)
+  }
   const [showCart, setShowCart] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showUsers, setShowUsers] = useState(false)
@@ -21,6 +32,9 @@ export default function Header(){
   const [signupRole, setSignupRole] = useState('customer')
   const [showProfile, setShowProfile] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showAI, setShowAI] = useState(false)
+  const [showVendorDash, setShowVendorDash] = useState(false)
+  const [showPromos, setShowPromos] = useState(false)
 
   const cartCount = items.reduce((s, i) => s + (i.qty || 1), 0)
   const closeMobile = () => setShowMobileMenu(false)
@@ -36,22 +50,36 @@ export default function Header(){
 
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-2">
+          {/* AI Recommender — visible to all */}
+          <button onClick={() => setShowAI(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-orange-600 hover:text-white hover:bg-orange-500 border border-orange-300 hover:border-orange-500 px-3 py-1.5 rounded-lg transition-all">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            AI Finder
+          </button>
           {user ? (
             <>
               {user.role === 'vendor' && (
-                <button onClick={() => setShowAdd(true)}
-                  className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
-                  Add Product
-                </button>
+                <>
+                  <button onClick={() => setShowAdd(true)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
+                    Add Product
+                  </button>
+                  <button onClick={() => setShowVendorDash(true)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Dashboard
+                  </button>
+                </>
               )}
               {user.role === 'admin' && (
                 <>
                   <button onClick={() => setShowAdmin(a => !a)} className="text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">Orders</button>
                   <button onClick={() => setShowUsers(u => !u)} className="text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">Users</button>
+                  <button onClick={() => setShowPromos(true)} className="text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">Promos</button>
                 </>
               )}
-              {(user.role === 'customer' || user.role === 'vendor') && (
+              {(user.role === 'customer') && (
                 <button onClick={() => setShowProfile(true)}
                   className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-orange-500 border border-gray-200 hover:border-orange-400 px-3 py-1.5 rounded-lg transition-all">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -63,7 +91,7 @@ export default function Header(){
                 <span className="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center text-xs font-bold uppercase">{(user.email || 'U')[0]}</span>
                 <span className="text-gray-700 font-medium max-w-[120px] truncate">{user.email}</span>
               </button>
-              <button onClick={logout} className="text-sm font-medium text-gray-500 hover:text-red-500 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all">Logout</button>
+              <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-red-500 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all">Logout</button>
             </>
           ) : (
             <>
@@ -79,14 +107,16 @@ export default function Header(){
 
         {/* Mobile right side */}
         <div className="flex sm:hidden items-center gap-2">
-          {/* Cart (always visible) */}
-          <button onClick={() => setShowCart(s => !s)}
-            className="relative flex items-center gap-1.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition-all shadow-sm">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
-            )}
-          </button>
+          {/* Cart (hidden for vendors) */}
+          {user?.role !== 'vendor' && (
+            <button onClick={() => setShowCart(s => !s)}
+              className="relative flex items-center gap-1.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
+              )}
+            </button>
+          )}
           {/* Hamburger */}
           <button onClick={() => setShowMobileMenu(m => !m)}
             className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">
@@ -97,15 +127,17 @@ export default function Header(){
           </button>
         </div>
 
-        {/* Desktop cart */}
-        <button onClick={() => setShowCart(s => !s)}
-          className="hidden sm:flex relative items-center gap-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-4 py-1.5 rounded-lg transition-all shadow-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-          <span>Cart</span>
-          {cartCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
-          )}
-        </button>
+        {/* Desktop cart (hidden for vendors) */}
+        {user?.role !== 'vendor' && (
+          <button onClick={() => setShowCart(s => !s)}
+            className="hidden sm:flex relative items-center gap-2 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-700 px-4 py-1.5 rounded-lg transition-all shadow-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            <span>Cart</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Mobile menu dropdown */}
@@ -120,12 +152,24 @@ export default function Header(){
                   <p className="text-xs text-gray-400 capitalize">{user.role}</p>
                 </div>
               </div>
+                      <button onClick={() => { setShowAI(true); closeMobile() }}
+                className="w-full flex items-center gap-2 text-sm font-medium text-orange-600 hover:bg-orange-50 px-3 py-2.5 rounded-xl transition-all text-left">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                AI Shoe Finder
+              </button>
               {user.role === 'vendor' && (
-                <button onClick={() => { setShowAdd(true); closeMobile() }}
-                  className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
-                  Add Product
-                </button>
+                <>
+                  <button onClick={() => { setShowAdd(true); closeMobile() }}
+                    className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
+                    Add Product
+                  </button>
+                  <button onClick={() => { setShowVendorDash(true); closeMobile() }}
+                    className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Dashboard
+                  </button>
+                </>
               )}
               {user.role === 'admin' && (
                 <>
@@ -139,9 +183,14 @@ export default function Header(){
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     Users
                   </button>
+                  <button onClick={() => { setShowPromos(true); closeMobile() }}
+                    className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                    Promo Codes
+                  </button>
                 </>
               )}
-              {(user.role === 'customer' || user.role === 'vendor') && (
+              {(user.role === 'customer') && (
                 <button onClick={() => { setShowProfile(true); closeMobile() }}
                   className="w-full flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600 px-3 py-2.5 rounded-xl transition-all text-left">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -154,7 +203,7 @@ export default function Header(){
                 Profile
               </button>
               <div className="border-t border-gray-100 mt-2 pt-2">
-                <button onClick={() => { logout(); closeMobile() }}
+                <button onClick={handleLogout}
                   className="w-full flex items-center gap-2 text-sm font-medium text-red-500 hover:bg-red-50 px-3 py-2.5 rounded-xl transition-all text-left">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                   Logout
@@ -188,6 +237,9 @@ export default function Header(){
       {showLogin && <LoginForm onClose={() => setShowLogin(false)} onSwitchToSignup={() => { setSignupRole('customer'); setShowSignup(true) }} />}
       {showSignup && <SignupForm onClose={() => setShowSignup(false)} defaultRole={signupRole} onSwitchToLogin={() => setShowLogin(true)} />}
       {showProfile && <Profile onClose={() => setShowProfile(false)} />}
+      {showAI && <AIRecommender onClose={() => setShowAI(false)} />}
+      {showVendorDash && <VendorDashboard onClose={() => setShowVendorDash(false)} />}
+      {showPromos && <PromoManager onClose={() => setShowPromos(false)} />}
     </header>
   )
 }

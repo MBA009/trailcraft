@@ -39,6 +39,12 @@ export default function ProductCard({ product: initialProduct }){
               </svg>
             </button>
           )}
+          {product.stock === 0 && (
+            <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">Out of Stock</span>
+          )}
+          {product.stock > 0 && product.stock <= 5 && (
+            <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">Only {product.stock} left</span>
+          )}
         </div>
         <div className="p-4 flex-1 flex flex-col">
           <div>
@@ -52,7 +58,7 @@ export default function ProductCard({ product: initialProduct }){
           <div className="mt-3 flex items-center justify-between">
             <div className="text-xs text-gray-500">Sizes: {product.sizes?.slice(0, 4).join(', ')}</div>
             <div className="flex items-center gap-2">
-              <button onClick={e => { e.stopPropagation(); setShow(true) }} className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">Add</button>
+              {user?.role !== 'vendor' && <button onClick={e => { e.stopPropagation(); setShow(true) }} className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">Add</button>}
               {canEdit && <button onClick={e => { e.stopPropagation(); remove() }} disabled={loading} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-all">Delete</button>}
             </div>
           </div>
